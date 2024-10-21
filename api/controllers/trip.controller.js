@@ -12,11 +12,11 @@ const tripController = {
     },
 
     // Tạo mới một địa điểm
-    createtrip: async (req, res) => {
+    createTrip: async (req, res) => {
         try {
-            const trip = new trip(req.body);
-            const savedtrip = await trip.save();
-            res.status(201).json(savedtrip);
+            const newTrip = new trip(req.body); // Đổi tên biến
+            const savedTrip = await newTrip.save();
+            res.status(201).json(savedTrip);
         } catch (err) {
             res.status(500).json({ message: 'Error creating trip', error: err.message });
         }
