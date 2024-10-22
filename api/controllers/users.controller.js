@@ -1,7 +1,7 @@
 
 
 const users = require('../models/users.model');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 
 const usersController = {
@@ -26,11 +26,8 @@ const usersController = {
                 return res.status(400).json({ message: 'Email already exists' });
             }
     
-            // Mã hóa mật khẩu trước khi lưu
-            const hashedPassword = await bcrypt.hash(password, 10); // 10 là số lần hash (salt rounds)
-    
-            // Tạo user mới với mật khẩu đã mã hóa
-            const newUser = new users({ email, name, password: hashedPassword });
+            // Tạo user mới với mật khẩu chưa mã hóa
+            const newUser = new users({ email, name, password }); // Không mã hóa mật khẩu
             const savedUser = await newUser.save();
     
             res.status(201).json(savedUser);
@@ -38,6 +35,7 @@ const usersController = {
             res.status(500).json({ message: 'Error creating user', error: err.message });
         }
     },
+    
     // loginUser: async (req, res) => {
     //     const { email, password } = req.body;
     //     try {
