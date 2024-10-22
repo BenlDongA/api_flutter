@@ -32,7 +32,7 @@ app.use(cors());
 const TripRoute = require('./api/routes/trip.route')
 const usersRoute = require('./api/routes/users.route')
 app.use("/api/user",usersRoute)
-app.use("/api/user/login",usersRoute)
+// app.use("/api/user/login",usersRoute)
 app.use("/api/trip",TripRoute)
 app.get('/',(req,res) => res.send(""))
 
