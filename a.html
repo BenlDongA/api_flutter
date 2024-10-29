@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Get Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="file"], input[type="text"], input[type="submit"] {
+            margin: 10px;
+        }
+        .image-list {
+            margin-top: 20px;
+        }
+        .image-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .image-item img {
+            width: 100px; /* Thay đổi kích thước hình ảnh */
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload and Get Images</h1>
+
+    <h2>Upload Image</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <input type="text" name="description" placeholder="Image Description">
+        <input type="submit" value="Upload">
+    </form>
+    <div id="uploadResponse"></div>
+
+    <h2>Get Images</h2>
+    <button id="getImages">Get Images</button>
+    <div class="image-list" id="imageList"></div>
+
+    <script>
+        // Upload image
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn không cho form được gửi
+
+            const formData = new FormData(this);
+            fetch('http://localhost:2000/api/image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('uploadResponse').innerText = JSON.stringify(data, null, 2);
+                getImages(); // Tự động cập nhật danh sách hình ảnh
+            })
+            .catch(error => {
+                document.getElementById('uploadResponse').innerText = 'Error: ' + error;
+            });
+        });
+
+        // Get images
+        function getImages() {
+            fetch('http://localhost:2000/api/image', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const imageList = document.getElementById('imageList');
+                imageList.innerHTML = ''; // Xóa danh sách hình ảnh trước đó
+                data.forEach(image => {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    imageItem.innerHTML = `
+                        <img src="${image.url}" alt="${image.description || 'Image'}">
+                        <button class="deleteButton" data-id="${image._id}">Delete</button>
+                    `;
+                    imageList.appendChild(imageItem);
+                });
+
+                // Thêm sự kiện cho nút Delete
+                document.querySelectorAll('.deleteButton').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const imageId = this.getAttribute('data-id');
+                        deleteImage(imageId);
+                    });
+                });
+            })
+            .catch(error => {
+                const imageList = document.getElementById('imageList');
+                imageList.innerText = 'Error: ' + error;
+            });
+        }
+
+        // Delete image
+        function deleteImage(id) {
+            fetch(`http://localhost:2000/api/image/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Image deleted successfully');
+                getImages(); // Cập nhật danh sách hình ảnh sau khi xóa
+            })
+            .catch(error => {
+                alert('Error deleting image: ' + error);
+            });
+        }
+
+        // Thêm sự kiện cho nút Get Images
+        document.getElementById('getImages').addEventListener('click', getImages);
+    </script>
+</body>
+</html>

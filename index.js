@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 
-const MONGODB_URL='mongodb+srv://cuong:cuong@cluster0.ya5c7.mongodb.net/flutter?retryWrites=true&w=majority&appName=Cluster0'
+const MONGODB_URL='mongodb+srv://cuong:cuong@cluster0.ya5c7.mongodb.net/flutter'
 
 
 // Sử dụng async/await để kết nối MongoDB
@@ -31,9 +31,11 @@ app.use(cors());
 
 const TripRoute = require('./api/routes/trip.route')
 const usersRoute = require('./api/routes/users.route')
+const imageRoutes = require('./api/routes/img.route');
 app.use("/api/user",usersRoute)
 // app.use("/api/user/login",usersRoute)
 app.use("/api/trip",TripRoute)
+app.use('/api/image', imageRoutes);
 app.get('/',(req,res) => res.send(""))
 
 
