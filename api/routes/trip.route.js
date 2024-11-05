@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const tripController = require('../controllers/trip.controller');
+const tripController = require('../controllers/trip.controller.js');
 
 // Lấy danh sách tất cả địa điểm
 router.get('/', tripController.gettrip);

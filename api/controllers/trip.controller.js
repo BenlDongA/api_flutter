@@ -1,4 +1,4 @@
-const trip = require('../models/trip.model');
+const trip = require('../models/trip.model.js');
 
 const tripController = {
     // Lấy danh sách tất cả các địa điểm

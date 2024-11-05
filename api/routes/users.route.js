@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const usersController = require('../controllers/users.controller');
+const usersController = require('../controllers/users.controller.js');
 
 // Lấy danh sách tất cả địa điểm
 router.get('/', usersController.getusers);
