@@ -25,7 +25,9 @@ connectDB();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+}));
+
 app.use('/uploads', express.static('uploads'));
 
 // Import routes
@@ -44,7 +46,7 @@ app.use('/api/home', homeRoute);
 app.get('/', (req, res) => res.send('API is running...'));
 
 // Khởi động server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

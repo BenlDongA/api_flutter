@@ -1,13 +1,11 @@
-
+// trip.route.js
 const express = require('express');
 const router = express.Router();
 const tripController = require('../controllers/trip.controller.js');
-
-// Lấy danh sách tất cả địa điểm
 router.get('/', tripController.gettrip);
-
-// Tạo mới một địa điểm
-router.post('/create', tripController.createTrip);
+router.post('/', tripController.createTrip);
+router.delete('/:id', tripController.deleteTrip); 
 router.delete('/deleteAll', tripController.deleteAlltrips);
+router.put('/:id', tripController.updateTrip); // Route cho chức năng update
 
 module.exports = router;
