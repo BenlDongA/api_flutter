@@ -15,13 +15,37 @@ const tripController = {
     // Tạo mới một địa điểm
     createTrip: async (req, res) => {
         try {
-            const newTrip = new trip(req.body);
-            const savedTrip = await newTrip.save();
-            res.status(201).json(savedTrip);
+          const trips = req.body;
+      
+          // Kiểm tra xem dữ liệu có phải là mảng
+          if (!Array.isArray(trips)) {
+            return res.status(400).json({
+              message: "Invalid input. Expected an array of trips.",
+            });
+          }
+      
+          // Kiểm tra từng chuyến đi trong mảng có đầy đủ trường bắt buộc
+          const missingFields = trips.filter(
+            (trip) =>
+              !trip.name || !trip.avatar || !trip.price || !trip.date || !trip.duration
+          );
+      
+          if (missingFields.length > 0) {
+            return res.status(400).json({
+              message: "Some trips have missing required fields.",
+              missingFields: missingFields,
+            });
+          }
+      
+          // Lưu toàn bộ mảng chuyến đi vào database
+          const savedTrips = await trip.insertMany(trips);
+          res.status(201).json(savedTrips);
         } catch (err) {
-            res.status(500).json({ message: 'Error creating trip', error: err.message });
+          console.error("Error creating trips:", err);
+          res.status(500).json({ message: "Error creating trips", error: err.message });
         }
-    },
+      },
+      
     deleteTrip: async (req, res) => {
         const { id } = req.params; // Lấy ID từ params
 
