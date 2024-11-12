@@ -2,7 +2,7 @@
 const trip = require('../models/trip.model.js');
 const mongoose = require('mongoose');
 const tripController = {
-    // Lấy danh sách tất cả các địa điểm
+
     gettrip: async (req, res) => {
         try {
             const trips = await trip.find();
@@ -12,7 +12,6 @@ const tripController = {
         }
     },
 
-    // Tạo mới một địa điểm
     createTrip: async (req, res) => {
         try {
           const trips = req.body;
@@ -24,7 +23,7 @@ const tripController = {
             });
           }
       
-          // Kiểm tra từng chuyến đi trong mảng có đầy đủ trường bắt buộc
+    
           const missingFields = trips.filter(
             (trip) =>
               !trip.name || !trip.avatar || !trip.price || !trip.date || !trip.duration
@@ -37,7 +36,7 @@ const tripController = {
             });
           }
       
-          // Lưu toàn bộ mảng chuyến đi vào database
+    
           const savedTrips = await trip.insertMany(trips);
           res.status(201).json(savedTrips);
         } catch (err) {
@@ -47,7 +46,7 @@ const tripController = {
       },
       
     deleteTrip: async (req, res) => {
-        const { id } = req.params; // Lấy ID từ params
+        const { id } = req.params; 
 
         try {
             const deletedTrip = await trip.findByIdAndDelete(id);
@@ -60,27 +59,26 @@ const tripController = {
             res.status(500).json({ message: 'Error deleting trip', error: err.message });
         }
     },
-    // Xóa tất cả địa điểm
+
     deleteAlltrips: async (req, res) => {
         try {
-            const result = await trip.deleteMany({}); // Xóa tất cả các địa điểm
+            const result = await trip.deleteMany({}); 
             res.status(200).json({ message: 'All trips deleted successfully', result });
         } catch (err) {
             res.status(500).json({ message: 'Error deleting all trips', error: err.message });
         }
     },
     updateTrip: async (req, res) => {
-        const { id } = req.params; // Lấy ID từ params
-        const updateData = req.body; // Lấy dữ liệu cần cập nhật từ body
-    
+        const { id } = req.params; 
+        const updateData = req.body; 
         try {
-            // Tìm chuyến đi theo ID và cập nhật dữ liệu
+    
             const updatedTrip = await trip.findByIdAndUpdate(id, updateData, { new: true });
-            
+          
             if (!updatedTrip) {
                 return res.status(404).json({ message: 'Trip not found' });
             }
-    
+  
             res.status(200).json(updatedTrip);
         } catch (err) {
             console.error('Error updating trip:', err);

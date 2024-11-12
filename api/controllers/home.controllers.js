@@ -1,8 +1,8 @@
-// controller
-const ImgHome = require('../models/home.model'); // Update path if necessary
+
+const ImgHome = require('../models/home.model'); 
 
 const imgHomeController = {
-    // Lấy danh sách tất cả các địa điểm
+
     getImgHome: async (req, res) => {
         try {
             const imgHomes = await ImgHome.find();
@@ -12,7 +12,7 @@ const imgHomeController = {
         }
     },
 
-    // Tạo mới một địa điểm
+  
     createImgHome: async (req, res) => {
         try {
             const newImgHome = new ImgHome(req.body);
@@ -23,13 +23,41 @@ const imgHomeController = {
         }
     },
 
-    // Xóa tất cả địa điểm
+    
     deleteAllImgHomes: async (req, res) => {
         try {
             const result = await ImgHome.deleteMany({});
             res.status(200).json({ message: 'All image homes deleted successfully', result });
         } catch (err) {
             res.status(500).json({ message: 'Error deleting all image homes', error: err.message });
+        }
+    },
+
+
+    deleteImgHomeById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const deletedImgHome = await ImgHome.findByIdAndDelete(id);
+            if (!deletedImgHome) {
+                return res.status(404).json({ message: 'Image home not found' });
+            }
+            res.status(200).json({ message: 'Image home deleted successfully', deletedImgHome });
+        } catch (err) {
+            res.status(500).json({ message: 'Error deleting image home by ID', error: err.message });
+        }
+    },
+
+   
+    updateImgHomeById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const updatedImgHome = await ImgHome.findByIdAndUpdate(id, req.body, { new: true });
+            if (!updatedImgHome) {
+                return res.status(404).json({ message: 'Image home not found' });
+            }
+            res.status(200).json({ message: 'Image home updated successfully', updatedImgHome });
+        } catch (err) {
+            res.status(500).json({ message: 'Error updating image home by ID', error: err.message });
         }
     }
 }

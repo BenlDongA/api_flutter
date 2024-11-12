@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const imgHomeSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
-        required: true // URL or path to the image
+        required: true
     },
     locationName: {
         type: String,

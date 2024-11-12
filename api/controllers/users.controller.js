@@ -1,9 +1,3 @@
-
-
-
-
-// controllers/users.controller.js
-
 const users = require('../models/users.model.js');
 
 const usersController = {
@@ -41,7 +35,6 @@ const usersController = {
         }
     },
 
-    // Thêm hàm updateUser để sửa người dùng
     updateUser: async (req, res) => {
         const userId = req.params.id;
         const { email, name, password } = req.body;
@@ -57,7 +50,6 @@ const usersController = {
         }
     },
 
-    // Thêm hàm deleteUser để xóa người dùng
     deleteUser: async (req, res) => {
         const userId = req.params.id;
 
