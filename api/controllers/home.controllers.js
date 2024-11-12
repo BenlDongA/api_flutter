@@ -1,65 +1,60 @@
+const Home = require('../models/home.model');
 
-const ImgHome = require('../models/home.model'); 
+// Get all images
+exports.getImgHome = async (req, res) => {
+  try {
+    const homes = await Home.find();
+    res.status(200).json(homes);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+};
 
-const imgHomeController = {
+// Create a new home
+exports.createImgHome = async (req, res) => {
+  try {
+    const newHome = new Home(req.body);
+    await newHome.save();
+    res.status(201).json(newHome);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to create data' });
+  }
+};
 
-    getImgHome: async (req, res) => {
-        try {
-            const imgHomes = await ImgHome.find();
-            res.status(200).json(imgHomes);
-        } catch (err) {
-            res.status(500).json({ message: 'Error fetching images', error: err.message });
-        }
-    },
-
-  
-    createImgHome: async (req, res) => {
-        try {
-            const newImgHome = new ImgHome(req.body);
-            const savedImgHome = await newImgHome.save();
-            res.status(201).json(savedImgHome);
-        } catch (err) {
-            res.status(500).json({ message: 'Error creating image home', error: err.message });
-        }
-    },
-
-    
-    deleteAllImgHomes: async (req, res) => {
-        try {
-            const result = await ImgHome.deleteMany({});
-            res.status(200).json({ message: 'All image homes deleted successfully', result });
-        } catch (err) {
-            res.status(500).json({ message: 'Error deleting all image homes', error: err.message });
-        }
-    },
-
-
-    deleteImgHomeById: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const deletedImgHome = await ImgHome.findByIdAndDelete(id);
-            if (!deletedImgHome) {
-                return res.status(404).json({ message: 'Image home not found' });
-            }
-            res.status(200).json({ message: 'Image home deleted successfully', deletedImgHome });
-        } catch (err) {
-            res.status(500).json({ message: 'Error deleting image home by ID', error: err.message });
-        }
-    },
-
-   
-    updateImgHomeById: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const updatedImgHome = await ImgHome.findByIdAndUpdate(id, req.body, { new: true });
-            if (!updatedImgHome) {
-                return res.status(404).json({ message: 'Image home not found' });
-            }
-            res.status(200).json({ message: 'Image home updated successfully', updatedImgHome });
-        } catch (err) {
-            res.status(500).json({ message: 'Error updating image home by ID', error: err.message });
-        }
+// Update a home by ID
+exports.updateImgHomeById = async (req, res) => {
+  try {
+    const updatedHome = await Home.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!updatedHome) {
+      return res.status(404).json({ error: 'Home not found' });
     }
-}
+    res.status(200).json(updatedHome);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to update data' });
+  }
+};
 
-module.exports = imgHomeController;
+// Delete a home by ID
+exports.deleteImgHomeById = async (req, res) => {
+  try {
+    const deletedHome = await Home.findByIdAndDelete(req.params.id);
+    if (!deletedHome) {
+      return res.status(404).json({ error: 'Home not found' });
+    }
+    res.status(200).json({ message: 'Home deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete data' });
+  }
+};
+
+// Delete all homes
+exports.deleteAllImgHomes = async (req, res) => {
+  try {
+    await Home.deleteMany();
+    res.status(200).json({ message: 'All homes deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete data' });
+  }
+};
