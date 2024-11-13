@@ -23,11 +23,12 @@ const tripController = {
             });
           }
       
-    
           const missingFields = trips.filter(
-            (trip) =>
-              !trip.name || !trip.avatar || !trip.price || !trip.date || !trip.duration
+            (trip) => {
+              return !trip.name || !trip.avatar || !trip.price || !trip.date || !trip.duration || !trip.countryName;
+            }
           );
+          
       
           if (missingFields.length > 0) {
             return res.status(400).json({

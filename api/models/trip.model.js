@@ -25,6 +25,12 @@ const tripSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  countryName: {
+    type: String,
+    required: true
+}
+  
+
 });
 
 const Trip = mongoose.model('Trip', tripSchema);
