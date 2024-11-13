@@ -13,15 +13,19 @@ const usersController = {
 
     createusers: async (req, res) => {
         try {
-            const { email, name, password,countryName } = req.body;
+            const { email, name, password, countryName } = req.body;
+            if (!countryName) {
+                return res.status(400).json({ message: 'Country name is required' });
+            }
             const existingUser = await users.findOne({ email });
             if (existingUser) {
                 return res.status(400).json({ message: 'Email already exists' });
             }
-            const newUser = new users({ email, name, password,countryName });
+            const newUser = new users({ email, name, password, countryName });
             const savedUser = await newUser.save();
             res.status(201).json(savedUser);
         } catch (err) {
+            console.error('Error creating user:', err);  // Ghi log lỗi
             res.status(500).json({ message: 'Error creating user', error: err.message });
         }
     },
@@ -37,10 +41,11 @@ const usersController = {
 
     updateUser: async (req, res) => {
         const userId = req.params.id;
-        const { email, name, password } = req.body;
-
+        const { email, name, password, countryName } = req.body;
+        const updateData = { email, name, password };
+        if (countryName) updateData.countryName = countryName; 
         try {
-            const updatedUser = await users.findByIdAndUpdate(userId, { email, name, password,countryName }, { new: true });
+            const updatedUser = await users.findByIdAndUpdate(userId, updateData, { new: true });
             if (!updatedUser) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -49,7 +54,6 @@ const usersController = {
             res.status(500).json({ message: 'Error updating user', error: err.message });
         }
     },
-
     deleteUser: async (req, res) => {
         const userId = req.params.id;
 

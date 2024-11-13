@@ -69,23 +69,22 @@ const tripController = {
         }
     },
     updateTrip: async (req, res) => {
-        const { id } = req.params; 
-        const updateData = req.body; 
-        try {
-    
-            const updatedTrip = await trip.findByIdAndUpdate(id, updateData, { new: true });
-          
-            if (!updatedTrip) {
-                return res.status(404).json({ message: 'Trip not found' });
-            }
-  
-            res.status(200).json(updatedTrip);
-        } catch (err) {
-            console.error('Error updating trip:', err);
-            res.status(500).json({ message: 'Error updating trip', error: err.message });
-        }
-    }
-    
+      const { id } = req.params; 
+      const updateData = req.body; 
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).json({ message: 'Invalid trip ID' });
+      }
+      try {
+          const updatedTrip = await trip.findByIdAndUpdate(id, updateData, { new: true });
+          if (!updatedTrip) {
+              return res.status(404).json({ message: 'Trip not found' });
+          }
+          res.status(200).json(updatedTrip);
+      } catch (err) {
+          console.error('Error updating trip:', err);
+          res.status(500).json({ message: 'Error updating trip', error: err.message });
+      }
+  }    
 };
 
 module.exports = tripController;
