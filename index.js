@@ -6,19 +6,16 @@ require('dotenv').config();
 
 const app = express();
 
-const MONGODB_URL = process.env.MONGODB_URL || 'mongodb+srv://cuong:cuong@cluster0.ya5c7.mongodb.net/flutter';
-
-const connectDB = async () => {
-    try {
-        await mongoose.connect(MONGODB_URL); 
-        console.log('Connected to the database successfully');
-    } catch (error) {
+const MONGODB_URL = process.env.MONGODB_URL || 'mongodb+srv://cuong:cuong@cluster0.mc5n4.mongodb.net/';
+mongoose.connect(MONGODB_URL)
+    .then(() => console.log('Connected to the database successfully'))
+    .catch((error) => {
         console.error('Error connecting to the database', error);
-        process.exit(1); 
-    }
-};
+        process.exit(1);
+    });
 
-connectDB();
+
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
